@@ -1,0 +1,22 @@
+:root {
+  --delay: 1s;
+  --duration: 500ms;
+}
+
+.fragment.visible.fade-children > * {
+  opacity: 0;
+  animation-name: fade-in;
+  animation-delay: var(--delay);
+  animation-duration: var(--duration);
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
