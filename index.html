@@ -15,81 +15,492 @@
   <!-- Presentation-specific styles -->
   <link rel="stylesheet" href="css/animation.css">
   <link rel="stylesheet" href="css/promises.css">
-
-  <!-- Printing and PDF exports -->
-  <script>
-    var link = document.createElement( 'link' );
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-    document.getElementsByTagName( 'head' )[0].appendChild( link );
-  </script>
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
+      <section class="title-slide">
+        <h1>Making Sense of Promises</h1>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>Simeon Vincent</p>
 
-      <section data-markdown="slides.md">
+        <aside class="notes" data-markdown  >
+          Good morning everyone. Thank you for having me.
+
+          My name is Simeon Vincent, though some of you may know me as DotProto on Twitter, Github, npm, and everywhere else.
+        </aside>
+      </section>
+
+      <section class="dotproto-slide" data-background-image="./images/nyantocat.gif">
+        <h1>
+          <a href="https://twitter.com/DotProto">@DotProto</a>
+        </h1>
+
+        <aside class="notes" data-markdown>
+          My name is Simeon Vincent, though some of you may know me as DotProto on Twitter, Github, npm, and everywhere else.
+
+          For the past 8 or so years I've been working at Blizzard Entertainment, makers of many a beloved game to which I've made only the tenuous of contributions.
+        </aside>
+      </section>
+
+      <section class="employer-slide" data-background-transition="slide">
+        <aside class="notes" data-markdown>
+          For the past 8 or so years I've been working at Blizzard Entertainment, makers of many a beloved game to which I've made only the tenuous of contributions.
+
+          I've spent the past 6 or so years as a front end engineer on the Battle.net team where I've worked on a variety of projects from the community sites like WorldofWarcraft.com to internal tools that help engineers build on the Battle.net platform.
+        </aside>
+      </section>
+
+      <section data-background-color="hsl(306, 30%, 28%)">
+        <img src="./images/codelab.png" width="40%" />
+        <h1>CodeLab OC</h1>
+
+        <aside class="notes" data-markdown>
+          I'm also a co-organizer of local meetup where I help folks learn about web development and I do some one-on-one mentoring on the side.
+
+          Over the past couple weeks I've noticed that a few different people I've been working with don't really **get** promises. I mean, they've worked with them, built features with them, and accomplished (most) of their goals. But they've done so without really understanding promises, which has lead to subtle, frustrating bugs that they're weren't sure how to tackle.
+        </aside>
       </section>
 
       <section>
-        <p>Some APIs</p>
-        <ul class="fragment fade-children">
-          <li style="--delay: 100ms">one</li>
-          <li style="--delay: 200ms">two</li>
-          <li style="--delay: 300ms">three</li>
+        <h1>promises … ?</h1>
+        <img src="./images/thinking.png" alt="thinking emoji" />
+
+        <aside class="notes" data-markdown>
+          Over the past couple weeks I've noticed that a few different people I've been working with don't really **get** promises. I mean, they've worked with them, built features with them, and accomplished (most) of their goals. But they've done so without really understanding promises, which has lead to subtle, frustrating bugs that they're weren't sure how to tackle.
+
+          Before we go on, I just want to say it's absolutely OKAY to not know everything. We're all constantly learning. I mean, the JS ecosystem and web development has been going gangbusters for the past decade or so. It's hard to keep up with all the change let alone wrap your head around it when you're brand new.
+
+          That said, I think it behooves us as technologists and as software practitioners to understand the core of our platforms -- those technologies we use every day, multiple times a day.
+
+          To that end, I'd like to take a couple minutes to break down what promises are and how the work to hopefully demystify them a little bit.
+        </aside>
+      </section>
+
+      <section>
+        <h2>But first …</h2>
+
+        <aside class="notes" data-markdown>
+          But before we get into Promises, let's talk about the language features that enable asynchronous programming in JavaScript.
+
+          Specifically, I'm talking about…
+        </aside>
+      </section>
+
+      <section style="font-size: 2em;">
+        <h3>🥇👩‍🏫&ensp;<span style="font-family: serif; text-transform: lowercase; font-size: 1.2em; position: relative; top: -0.05em;"><em>f</em>&thinsp;(x)</span></h3>
+
+        <p>&nbsp;</p>
+
+        <h3>📞🔙</h3>
+
+        <aside class="notes" data-markdown>
+          I'm taking about our goold old friends first class functions and callbacks
+        </aside>
+      </section>
+
+      <section>
+        <h2>First Class Fn</h2>
+
+        <pre style="font-size: 1.1em; margin-top: 1em;"><code class="js" data-trim data-noescape>
+          const fn = function() {};
+
+          console.log(fn);
+
+          (function() {
+            return fn;
+          })();
+        </code></pre>
+
+        <aside class="notes" data-markdown>
+          The term "first class function" is basically just a fancy way of saying that functions can be treated like like any other kind of data in the language.
+
+          You can assign them to variables, pass them as arguments, return them from other functions, and otherwise use them like any other piece of data.
+        </aside>
+      </section>
+
+
+      <section>
+        <h2>Callbacks</h2>
+
+        <pre style="font-size:.8em; margin-top: 1em;"><code class="js" data-trim data-noescape>
+          function callback() {
+            alert('Hello, world!');
+          }
+
+          document.addEventListener('click', callback);
+
+          setInterval(callback, 32000);
+        </code></pre>
+
+        <button onclick="alert('I AM UNLEASHED!<br>🍔😈🍔')">CLICK ME</button>
+
+        <aside class="notes" data-markdown>
+          Next, we've got callbacks. A callback is just a function that we pass to another piece of code which will call that function when something relevant happens.
+
+          Here we're declaring a function that we want to use as a callback and giving it the clever name "callback".
+
+          Next, we pass that function into `addEventListener` and bind it to the "click" event so that every time someone clicks anywhere on this page they'll get annoyed.
+
+          The key bit here is that we've prepared some work that we want to run when some condition is met, then we hand it off to some other part of the system for execution. It could get called immediately or never, but we don't have to worry about how that's scheduled and checked.
+        </aside>
+      </section>
+
+      <section>
+        <h2>async</h2>
+
+        <h2 class="fragment">🍔💨</h2>
+
+        <aside class="notes" data-markdown>
+          All right, now that we've covered the basics of asynchronous programming in JavaScript. It's time to talk about fast food.
+        </aside>
+      </section>
+
+      <section class="nans">
+        <h1><code>NaN's Burgers</code></h1>
+        <h3 class="fragment">We've got your number</h3>
+
+        <aside class="notes" data-markdown>
+        </aside>
+      </section>
+
+      <section class="callback-order-slide order">
+        <h1>&emsp;&emsp;&emsp;&emsp;🗨️🧕</h1>
+        <h1 class="fragment">💁‍✅&emsp;&emsp;&emsp;&emsp;</h1>
+        <h1 class="fragment">‍&emsp;&emsp;&emsp;&emsp;🏄🕸</h1>
+        <h1 class="fragment">‍💁‍📢️&emsp;&emsp;&emsp;&emsp;</h1>
+        <h1 class="fragment">&emsp;&emsp;&emsp;&emsp;🍔😊</h1>
+
+        <aside class="notes" data-markdown>
+          So you head into your favorite fastfood joint: NaN's
+
+          1. Start by giving them your order and your name
+          2. Once you've paid you're all set
+          3. Step to the side and do some important work like surfing the web. While you're doing that the restaurant works on your order
+          4. Once it's ready they call out your name
+          5. You get your food and the world is good
+
+          This exchange models single call callback interaction pretty well.
+        </aside>
+      </section>
+
+      <section class="promise-order-slide order">
+        <h1>&emsp;&emsp;&emsp;&emsp;🗨️🧕</h1>
+        <h1 class="fragment">💁‍🚩&emsp;&emsp;&emsp;&emsp;</h1>
+        <h1 class="fragment">‍&emsp;&emsp;&emsp;&emsp;🔨🍬</h1>
+        <h1 class="fragment"><span style="transform: scalex(-1); display: inline-block;">💨</span>💁🍔&emsp;🚩</h1>
+        <h1 class="fragment">&emsp;&emsp;&emsp;&emsp;🍔😊</h1>
+
+        <aside class="notes" data-markdown>
+          Promises aren't too different. Let's take a look at a promise-based version of the same exchange.
+
+          1. Start by giving the attendant your order
+          2. Once you've paid, they give you a flag for your table
+          3. Again, you take care of vital work like crushing sweets or whatever
+          4. When your order is ready, a server will deliver the order to the appropriate flag
+          5. And you respond by chowing down
+        </aside>
+      </section>
+
+      <section>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+
+        <h1 style="font-size: 5em;">
+          🚩
+          <span class="fragment fade-children" style="position: absolute; --duration: 100ms;">
+            <span style="--delay:100ms; position: absolute; right: -0.2em; top: 0.2em;">🚩</span>
+            <span style="--delay:200ms; position: absolute; right: -0.4em; top: 0.4em;">🚩</span>
+            <span style="--delay:300ms; position: absolute; right: -0.6em; top: 0.6em;">🚩</span>
+            <span style="--delay:400ms; position: absolute; right: -0.8em; top: 0.8em;">🚩</span>
+            <span style="--delay:500ms; position: absolute; right: -1.0em; top: 1.0em;">🚩</span>
+            <span style="--delay:600ms; position: absolute; right: -1.2em; top: 1.2em;">🚩</span>
+            <span style="--delay:700ms; position: absolute; right: -1.4em; top: 1.4em;">🚩</span>
+            <span style="--delay:800ms; position: absolute; right: -1.6em; top: 1.6em;">🚩</span>
+            <span style="--delay:900ms; position: absolute; right: -1.8em; top: 1.8em;">🚩</span>
+            <span style="--delay:1000ms; position: absolute; right: -2.0em; top: 2.0em;">🚩</span>
+            <span style="--delay:1100ms; position: absolute; right: -2.2em; top: 2.2em;">🚩</span>
+            <span style="--delay:1200ms; position: absolute; right: -2.4em; top: 2.4em;">🚩</span>
+            <span style="--delay:1300ms; position: absolute; right: -2.6em; top: 2.6em;">🚩</span>
+          </span>
+        </h1>
+
+        <aside class="notes" data-markdown>
+          These two flows look very similar because they're two ways of achieving the same goal: getting notified when your food is ready. But rather than having someone call your name (i.e. your callback function), the food is delivered to the flag holder (the promise).
+
+          To extend the metaphor a bit, say my friend is runing late and asked me to order for them. In a callback system, when their food is ready I would have to pick it up and deliver it to them. In a promise system, I can hand them the flag and they will recieve their order.
+
+          **[[CLICK]]**
+
+          And since we're talking about digital stuff, we're not constrained by the limits of physical systems. I could order family style and pass out promises to all of my friends so they can all get notified when the order is complete.
+
+          PROMISES FOR EVERYONE!
+        </aside>
+      </section>
+
+      <section>
+        <h2>The 🍔 Code</h2>
+        <pre style="font-size:.78em;"><code class="js" data-trim data-noescape>
+          // sim.js
+          <div class="fragment">const order = <mark>restaurant.placeOrder('burger')</mark>;</div>
+          <div class=fragment>order.<mark>then</mark>(function simOnSuccess(food) {
+            console.log(`I got a ${food}!`)
+          });</div>
+        </code></pre>
+
+        <pre class="fragment" style="font-size:.78em;"><code class="js" data-trim data-noescape>
+          // friend.js
+          <div class="fragment">simOrder.then(function friendOnSuccess(order) {
+            console.log(`Sim's friend has a ${order}!`)
+          });</div>
+        </code></pre>
+        <aside class="notes" data-markdown>
+          I've gotten a little hand wavy here, so let's concretize this by looking at some sample code. We're going to do the exact same thing we just did, but this time in JS.
+
+          In this first code block we're placing an order with the restaurant. This call will return a promise which we'll save to a constant called `order`.
+
+          Next, we'll use the promise's `.then()` method to register a callback that will be called the promise completes successfully.
+
+          And since the promise is just an object, we can pass it to another part of our application (represented here by our "friend" script) so it can also register a success callback.
+
+          ---
+
+          Now you might be saying, "Simeon, what are you even talking about, you're still just passing a callback and waiting for it to be invoked."
+
+          To which I'd say, yeah. You're absolutely right. The Promise pattern existed in JavaScript way before it was even up for consideration as a language feature. It was implmeented by a number of different libraires that became popular becaues provided a useful abstration.
+
+          And Promises aren't just callbacks by another name: they enable some pretty cool patterns.
+        </aside>
+      </section>
+
+      <section class="then-slide" data-transition="slide-in none-out">
+        <h2><code>.then()</code></h2>
+
+        <pre><code class="js" data-sample="js/samples.js#thenChain1" data-trim></code></pre>
+
+        <button id="thenChain1">Click Me!</button>
+
+        <aside class="notes" data-markdown>
+          In the previous example I mentioned the promise instance `.then()` method only in passing, but this simple method actually is actually quite powerful.
+
+          One of most powerful features of promises is that each `.then()` call returns *a new promise*
+        </aside>
+      </section>
+
+      <section class="then-slide">
+        <h2>A Simple 🔗</h2>
+
+        <pre><code class="js" data-sample="js/samples.js#thenChain2" data-trim></code></pre>
+
+        <button id="thenChain2">Click Me!</button>
+
+        <aside class="notes" data-markdown>
+          This means that every time then returns, we get another promise that we can continue to chain thens off of. And since we're getting a unique promise at every stage of the change, we can save the promise at any point for future refernce.
+
+          This chaining behavior has another major benifit: composibility.
+        </aside>
+      </section>
+
+      <section class="then-slide">
+        <h2>Composition</h2>
+
+        <pre><code class="js" data-sample="js/samples.js#thenChain3" data-trim></code></pre>
+
+        <button id="thenChain3">Click Me!</button>
+
+        <aside class="notes" data-markdown>
+          Here we have the same logic we were working with last slide, but we've abstracted our operations into reusable functions. Now, to perform the transformation we want we can drop those reusable functions into the promise chain and get the same result.
+
+          What's great about about this is our functions don't have to know anything about the data they're operating on, or that they're inside a promise chain. All they need to know they get in a value A, modify it, and return it. Easy as pie. So now these functions can be used anywhere else in the projet we might need them.
+        </aside>
+      </section>
+
+      <section class="then-slide" data-transition="slide-in none-out">
+        <h2><code>.then() v2</code></h2>
+        <pre><code class="js" data-trim data-noescape>
+          <div class="fragment fade-in-then-semi-out">// Register a success callback
+          promise.then(function onSuccess(value) {});</div>
+          <div class="fragment fade-in-then-semi-out">// Register both success and error
+          promise.then(
+            function onSuccess(value) {},
+            function onError(reason) {},
+          );
+          </div>
+          <div class="fragment fade-in-then-semi-out">// Register an error callback
+          promise.then(<mark>undefined</mark>, function OnError(reason) {});
+          </div>
+          <div class="fragment fade-in-then-semi-out">// Register an error callback
+          promise.<mark>catch</mark>(function onError(value) {});
+          </div>
+        </code></pre>
+
+        <aside class="notes" data-markdown>
+          1. I've mentined "success handlers" a few times now
+
+          2. But it's also possible to register interest in an error. [[Callbacks don't have a defined error path. Sometimes returns error object, sometimes throws]]
+
+              Potential unexpected path when you register both in the same place -- your error handler is an either or. If your success handler encounters an error you won't catch it.
+
+          3. You can work around this by passing an undefiend success handler or...
+
+          4. you can use `.catch()`
+
+          Every `.then()` or `.catch()` **returns another promise**
+        </aside>
+      </section>
+
+      <section class="then-slide" data-transition="none-in slide-out">
+        <h2><code>.then() v2</code></h2>
+        <pre><code class="js" data-trim data-noescape>
+          <div>// Register a success callback
+          promise.then(function onSuccess(value) {});</div>
+          <div>// Register both success and error
+          promise.then(
+            function onSuccess(value) {},
+            function onError(reason) {},
+          );
+          </div>
+          <div>// Register an error callback
+          promise.then(undefined, function OnError(reason) {});
+          </div>
+          <div>// Register an error callback
+          promise.catch(function onError(value) {});
+          </div>
+        </code></pre>
+
+        <aside class="notes" data-markdown>
+          In the previous example I mentioned the promise instance `.then()` method only in passing, but this simple method actually is actually quite powerful.
+
+          * Can register for both **success** and **error** updates
+          * Every .then or .catch **returns another promise**
+        </aside>
+      </section>
+
+      <section>
+        <h2>Error Handling</h2>
+
+        <pre><code class="js" data-sample="js/samples.js#catchHandler" data-trim></code></pre>
+
+        <button id="runCatchHandler">Do the thing!</button>
+
+        <aside class="notes" data-markdown>
+          There are a few things to call out here:
+
+          * You go down the error path by throwing
+          * Catch returns us to a happy path
+          *
+          * Promise.resolve() gets us into our final topic: creating promises
+        </aside>
+      </section>
+
+      <section>
+        <h2>Making Promises</h2>
+
+        <pre class="fragment"><code class="js" data-sample="js/samples.js#fullPromise" data-trim></code></pre>
+
+        <pre class="fragment"><code class="js" data-sample="js/samples.js#basicPromise" data-trim></code></pre>
+
+        <pre class="fragment"><code class="js" data-sample="js/samples.js#echoPromise" data-trim></code></pre>
+
+
+        <aside class="notes" data-markdown>
+          I've put this one off for far too long.
+
+          Creating promises is pretty straight forward, call new on the Promise constructor & pass in an executor. The executor takes 2 params. The first param is a resolve function
+
+          I should note that the executor is called before the promise constructor returns; it's **eagerly executed**. This is important becaues if nothing is intersted in the resolution of the proimse, it might be doing work for no reason.
+        </aside>
+      </section>
+
+      <!-- <section>
+        <h1></h1>
+        <pre><code class="js" data-sample="js/samples.js#echoPromise" data-trim></code></pre>
+        <pre class="fragment"><code class="js" data-sample="js/samples.js#promiseResolve"></code></pre>
+
+      </section> -->
+
+      <section>
+        <h2>Async Functions</h2>
+
+        <pre><code class="js" data-sample="js/samples.js#delay" data-trim></code></pre>
+        <pre class="fragment"><code class="js" data-sample="js/samples.js#awaitAlert" data-trim></code></pre>
+
+        <button id="runAsyncAlert">Run asyncAlert</button>
+
+        <aside class="notes" data-markdown>
+          Async Functions are basically syntactic sugar for Promises
+
+          Jake Archibald has a great article on this over at https://developers.google.com/web/fundamentals/primers/async-functions
+        </aside>
+      </section>
+
+      <section>
+        <h2>Async Functions</h2>
+
+        <pre><code class="js" data-sample="js/samples.js#delay" data-trim></code></pre>
+        <pre><code class="js" data-sample="js/samples.js#promiseAlert" data-trim></code></pre>
+
+        <button id="runPromiseAlert">Run promiseAlert</button>
+
+        <aside class="notes" data-markdown>
+          Async Functions are basically syntactic sugar for Promises
+        </aside>
+      </section>
+
+      <section>
+        <h1>Async Functions</h1>
+
+        <pre><code class="js" data-sample="js/samples.js#awaitAlert" data-trim></code></pre>
+        <pre><code class="js" data-sample="js/samples.js#promiseAlert" data-trim></code></pre>
+      </section>
+
+      <section>
+        <h1>Further Research</h1>
+        <h2 style="margin-top: -.5em;">Promises - Jake Archibald</h2>
+        <ul>
+          <li>
+            <a href="https://developers.google.com/web/fundamentals/primers/promises" rel="nofollow">JavaScript Promises: an Introduction</a>
+          </li>
+          <li>
+            <a href="https://jakearchibald.com/2014/resolve-not-opposite-of-reject/">Promises: resolve is not the opposite of reject</a>
+          </li>
+
+          <li>
+            <a href="https://developers.google.com/web/fundamentals/primers/async-functions">Async functions - making promises friendly</a>
+          </li>
+          <li>
+            <a href="https://jakearchibald.com/2017/await-vs-return-vs-return-await/">await vs return vs return await</a>
+          </li>
         </ul>
       </section>
+
+      <section>
+        <h1>Further Research</h1>
+        <h2 style="margin-top: -.5em;">Promises - non-Jake people</h2>
+
+        <ul>
+          <li>
+            <a href="https://kosamari.com/notes/the-promise-of-a-burger-party">The Promise of a Burger Party</a> by Mariko Kosamari
+          </li>
+          <li>
+            <a href="https://staltz.com/promises-are-not-neutral-enough.html" rel="nofollow">Promises are not neutral enough</a> by André Staltz
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=2d7s3spWAzo" rel="nofollow">Promises - Part 8 of Functional Programming in JavaScript</a> by MPJ
+          </li>
+        </ul>
+      </section>
+
     </div>
+    <div class="alert-wrapper"></div>
   </div>
 
   <script src="lib/js/head.min.js"></script>
+  <script src="js/purify.min.js"></script>
   <script src="js/reveal.js"></script>
 
-  <script>
-    // More info about config & dependencies:
-    // - https://github.com/hakimel/reveal.js#configuration
-    // - https://github.com/hakimel/reveal.js#dependencies
-    Reveal.initialize({
-      // width: "100%",
-      // height: "100%",
-
-      // Turns fragments on and off globally
-      fragments: true,
-
-      // Flags whether to include the current fragment in the URL,
-      // so that reloading brings you to the same fragment position
-      fragmentInURL: true,
-
-      // Push each slide change to the browser history
-      history: true,
-
-      // Shows the slide number using default formatting
-      slideNumber: true,
-
-      // Slide number formatting can be configured using these variables:
-      //  "h.v": 	horizontal . vertical slide number (default)
-      //  "h/v": 	horizontal / vertical slide number
-      //    "c": 	flattened slide number
-      //  "c/t": 	flattened slide number / total slides
-      slideNumber: 'c/t',
-
-      // Display presentation control arrows
-      controls: false,
-
-      // Help the user learn the controls by providing hints, for example by
-      // bouncing the down arrow when they first encounter a vertical slide
-      controlsTutorial: true,
-
-      // showNotes: true,
-
-      dependencies: [
-        { src: 'plugin/markdown/marked.js' },
-        { src: 'plugin/markdown/markdown.js' },
-        { src: 'plugin/notes/notes.js', async: true },
-        { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-      ]
-    });
-  </script>
+  <script src="js/promises.js"></script>
+  <script src="js/samples.js"></script>
 </body>
 </html>

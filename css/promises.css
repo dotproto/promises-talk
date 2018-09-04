@@ -4,42 +4,11 @@
   grid-template-rows: 10% 10% auto;
 } */
 
-.speaker-controls-notes code {
-  background: lightgray;
-}
-
-.reveal .dotproto a {
-  padding: .25em .5em;
-  background: #000c;
-  color: white;
-  border-radius: 2vmin;
-}
-
-.reveal section img {
-  background: none;
-  border: none;
-  box-shadow: none;
-}
-
-.reveal .slide-number {
-  font-size: 5vmin;
-}
-
-.reveal section .intro {
-  /* text-align: left;
-  */
-}
-.reveal section .intro img.avatar {
-  border: none;
-  height: 200px;
-  /* grid-row-start: span 2; */
-}
-
-#async-element-class-strike- {
-  position: absolute;
-  right: 0;
-}
-
+/* A couple slides share "order" scenarios, where a customer places an order.
+ * In these slides we're using multiple header elements to represent the
+ * flow of time as someone places an order. Unfortunately the default
+ * line-height makes it so 5 rows don't fit on a signle slide. We can fix that
+ * by cinching up the line-height a bit */
 .reveal .order h1,
 .reveal .order h2,
 .reveal .order h3,
@@ -49,6 +18,133 @@
   line-height: 1.1;
 }
 
+.reveal pre {
+  font-size:.7em;
+}
+
+/* Only highlight marks inside code fragments when the current fragment is focused */
+.reveal pre.fragment:not(.current-fragment) mark,
+.reveal pre .fragment:not(.current-fragment) > mark {
+  background-color: unset;
+  color: unset;
+}
+
+/* Turn off Reveal's default styling on images - it's just getting in the way */
+.reveal section img {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* Make font-size of the slide numbers scale */
+.reveal .slide-number {
+  font-size: 5vmin;
+}
+
+.reveal pre code {
+  max-height: 600px;
+}
+
+.reveal button,
+.reveal input[type="button"] {
+  font-size: .8em;
+}
+
+/* code blocks
+
+.reveal .slides section .fragment.fade-in-then-semi-out.visible {
+  opacity: 1;
+  visibility: inherit;
+}
+
+.reveal .slides section .fragment.fade-in-then-semi-out.current-fragment {
+  filter: brightness(1.2) saturate(1.5) contrast(1.2);
+  background: #fff1;
+} */
+
+/* TITLE SLIDE */
+.reveal .title-slide .slide-background-content {
+  background:
+    linear-gradient(to bottom, white 60%, hsla(158, 58%, 40%, 1) 50%);
+}
+
+.reveal .title-slide h1 {
+  color: hsla(158, 58%, 40%, 1);
+}
+
+/* EMPLOYER  */
+.reveal .employer-slide .slide-background-content {
+  background:
+    url("../images/blizzard_logo.jpg"),
+    url("../images/bnet-new-simple.png"),
+    linear-gradient(to right, black, black 50%, #181E2E 50%);
+  background-size: 30% auto, 30% auto, 100%;
+  background-position: left 20% top 50%, right 22.5% top 50%, 50%;
+  background-repeat: no-repeat;
+}
+
+/* DOTPROTO */
+.reveal .dotproto-slide a {
+  padding: .25em .5em;
+  background: #000c;
+  color: white;
+  border-radius: 2vmin;
+}
+
+/* NANs */
+
+.reveal .nans h1 {
+  text-shadow: 0 0 .25em black;
+}
+
+.reveal .nans .slide-background-content {
+  background: linear-gradient(to bottom,
+    rgb(129, 95, 0) 35%,
+    rgb(5, 61, 0) 35%,
+    rgb(5, 61, 0) 40%,
+    rgb(61, 0, 0) 40%,
+    rgb(61, 0, 0) 45%,
+    rgb(161, 145, 0) 45%,
+    rgb(161, 145, 0) 50%,
+    rgb(61, 35, 0) 50%,
+    rgb(61, 35, 0) 70%,
+    rgb(129, 99, 0) 70%);
+}
+
+/* THEN - let's talk about Promise.prototype.then */
 .reveal .then-slide pre {
-  font-size: .75em;
+  font-size: .7em;
+}
+
+.reveal .alert-wrapper {
+  position: fixed;
+  top: 20vh;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  color: black;
+  pointer-events: none;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.reveal .alertbox {
+  background: white;
+  display: inline-block;
+  padding: 1em 2em;
+  border-radius: 1vmin;
+  box-shadow: 0 5px 20px black;
+  pointer-events: all;
+  font-size: 2em;
+}
+
+.reveal .alertbox:before{
+  position: fixed;
+  content: '';
+  background: #0005;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: -1;
 }
