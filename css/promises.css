@@ -148,3 +148,11 @@
   left: 0;
   z-index: -1;
 }
+
+.reveal .talk-link {
+  position: absolute;
+  bottom: .6em;
+  left: .6em;
+  font-size: 3vmin;
+  z-index: 1;
+}
