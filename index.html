@@ -134,7 +134,7 @@
           setInterval(callback, 32000);
         </code></pre>
 
-        <button onclick="alert('I AM UNLEASHED!<br>🍔😈🍔')">CLICK ME</button>
+        <button onclick="alert('Hello, world🍔')">CLICK ME</button>
 
         <aside class="notes" data-markdown>
           Next, we've got callbacks. A callback is just a function that we pass to another piece of code which will call that function when something relevant happens.
@@ -157,16 +157,31 @@
         </aside>
       </section>
 
-      <section class="nans">
+      <section class="nans" data-transition="slide-in none-out">
         <h1><code>NaN's Burgers</code></h1>
-        <h3 class="fragment">We've got your number</h3>
+        <h3 class="fragment">The World's #<code style="font-family:courier;">NaN</code> Burger Chain</h3>
+        <aside class="notes" data-markdown>
+        </aside>
+      </section>
+
+      <section class="nans" data-transition="none-in none-out">
+        <h1><code>NaN's Burgers</code></h1>
+        <h3 class="fragment"><code>NaN</code>'s has your number</h3>
+
+        <aside class="notes" data-markdown>
+        </aside>
+      </section>
+
+      <section class="nans" data-transition="none-in slide-out">
+        <h1><code>NaN's Burgers</code></h1>
+        <h3 class="fragment">If it's not <code>NaN</code>'s, it's <code>undefined is</code> <code style="position: absolute; display: inline-block; white-space: nowrap; padding-left: 0.6em;">not a function</code></h3>
 
         <aside class="notes" data-markdown>
         </aside>
       </section>
 
       <section class="callback-order-slide order">
-        <h1>&emsp;&emsp;&emsp;&emsp;🗨️🧕</h1>
+        <h1>&emsp;&emsp;&emsp;&emsp;<span class="fragment">🗨️</span>🧕</h1>
         <h1 class="fragment">💁‍✅&emsp;&emsp;&emsp;&emsp;</h1>
         <h1 class="fragment">‍&emsp;&emsp;&emsp;&emsp;🏄🕸</h1>
         <h1 class="fragment">‍💁‍📢️&emsp;&emsp;&emsp;&emsp;</h1>
@@ -188,7 +203,7 @@
       <section class="promise-order-slide order">
         <h1>&emsp;&emsp;&emsp;&emsp;🗨️🧕</h1>
         <h1 class="fragment">💁‍🚩&emsp;&emsp;&emsp;&emsp;</h1>
-        <h1 class="fragment">‍&emsp;&emsp;&emsp;&emsp;🔨🍬</h1>
+        <h1 class="fragment">‍&emsp;&emsp;&emsp;&emsp;🍬🔨</h1>
         <h1 class="fragment"><span style="transform: scalex(-1); display: inline-block;">💨</span>💁🍔&emsp;🚩</h1>
         <h1 class="fragment">&emsp;&emsp;&emsp;&emsp;🍔😊</h1>
 
@@ -297,8 +312,21 @@
 
         <aside class="notes" data-markdown>
           This means that every time then returns, we get another promise that we can continue to chain thens off of. And since we're getting a unique promise at every stage of the change, we can save the promise at any point for future refernce.
+        </aside>
+      </section>
 
-          This chaining behavior has another major benifit: composibility.
+
+      <section class="then-slide">
+        <h2>A Simple 🔗</h2>
+
+        <pre><code class="js" data-sample="js/samples.js#thenChain2B" data-trim></code></pre>
+
+        <button id="thenChain2B">Click Me!</button>
+
+        <aside class="notes" data-markdown>
+            And since we're getting a unique promise at every stage of the change, we can save the promise at any point for future refernce.
+
+            This chaining behavior has another major benifit: composibility.
         </aside>
       </section>
 
@@ -314,6 +342,11 @@
 
           What's great about about this is our functions don't have to know anything about the data they're operating on, or that they're inside a promise chain. All they need to know they get in a value A, modify it, and return it. Easy as pie. So now these functions can be used anywhere else in the projet we might need them.
         </aside>
+      </section>
+
+      <section class="dotproto-slide" data-background-image="./images/mpj.jpg">
+        <h1><a href="https://www.youtube.com/watch?v=2d7s3spWAzo">Watch me!</a></h1>
+
       </section>
 
       <section class="then-slide" data-transition="slide-in none-out">

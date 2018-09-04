@@ -45,6 +45,17 @@ thenChain2.addEventListener('click', () => {
   // end-sample
 })
 
+thenChain2B.addEventListener('click', () => {
+  // sample(thenChain2B)
+  const partial = echoPromise('so cool')
+    .then((message) => message.toUpperCase())
+
+  partial
+    .then((message) => message + '!!!')
+    .then((message) => alert(message))
+  // end-sample
+})
+
 thenChain3.addEventListener('click', () => {
   // sample(thenChain3)
   const upperCase = (value) => value.toUpperCase();
